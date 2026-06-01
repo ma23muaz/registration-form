@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration | Fenet Teha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #21262d;
+            --border: #30363d;
+            --accent: #2f81f7;
+            --accent2: #58a6ff;
+            --accent-glow: rgba(47,129,247,0.2);
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --success: #3fb950;
+            --error: #f85149;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family:'Inter',sans-serif;
+            min-height:100vh; background:var(--bg);
+            color:var(--text); padding-bottom:60px;
+        }
+        body::before {
+            content:''; position:fixed; inset:0;
+            background-image:
+                linear-gradient(rgba(47,129,247,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(47,129,247,0.03) 1px, transparent 1px);
+            background-size:40px 40px; pointer-events:none; z-index:0;
+        }
+        .student-banner {
+            width:100%; background:#161b22;
+            border-bottom:1px solid var(--border);
+            padding:10px 20px; text-align:center; position:relative;
+        }
+        .student-banner::after {
+            content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
+            background:linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        .banner-inner {
+            display:flex; flex-wrap:wrap; align-items:center;
+            justify-content:center; gap:6px 16px;
+        }
+        .banner-name {
+            font-family:'Space Grotesk',sans-serif;
+            font-size:15px; font-weight:700; color:var(--accent2);
+        }
+        .banner-sep  { color:var(--border); }
+        .banner-detail { font-size:12px; color:var(--muted); }
+        .banner-detail span { color:var(--text); font-weight:600; }
+        .navbar {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:14px 36px;
+            background:rgba(22,27,34,0.95); backdrop-filter:blur(12px);
+            border-bottom:1px solid var(--border);
+            position:sticky; top:0; z-index:100;
+        }
+        .navbar-brand { display:flex; align-items:center; gap:10px; }
+        .nav-logo {
+            width:34px; height:34px; border-radius:8px; background:var(--accent);
+            display:inline-flex; align-items:center; justify-content:center;
+            font-size:16px; box-shadow:0 0 12px var(--accent-glow);
+        }
+        .navbar-brand span {
+            font-family:'Space Grotesk',sans-serif;
+            font-weight:600; font-size:16px; color:var(--text);
+        }
+        .user-info { display:flex; align-items:center; gap:12px; }
+        .user-badge {
+            background:var(--surface2); border:1px solid var(--border);
+            border-radius:6px; padding:5px 12px; font-size:12px; color:var(--muted);
+        }
+        .user-badge span { color:var(--accent2); font-weight:600; }
+        .btn-logout {
+            padding:7px 14px; background:transparent;
+            border:1px solid var(--border); color:var(--muted);
+            border-radius:6px; font-family:'Inter',sans-serif; font-size:12px;
+            cursor:pointer; transition:all 0.2s; font-weight:500;
+        }
+        .btn-logout:hover { border-color:var(--error); color:var(--error); }
+        .page-wrap { max-width:680px; margin:36px auto; padding:0 20px; position:relative; z-index:1; }
+        .page-heading { text-align:center; margin-bottom:32px; }
+        .page-heading h1 {
+            font-family:'Space Grotesk',sans-serif;
+            font-weight:700; font-size:32px; color:var(--text); letter-spacing:-0.5px;
+        }
+        .page-heading h1 span {
+            background:linear-gradient(90deg, var(--accent), #79c0ff);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        }
+        .page-heading p { color:var(--muted); margin-top:8px; font-size:14px; }
+        .section-card {
+            background:var(--surface); border:1px solid var(--border);
+            border-radius:12px; padding:24px 28px;
+            margin-bottom:16px; position:relative;
+        }
+        .section-card::before {
+            content:''; position:absolute; top:0; left:16px; right:16px; height:1px;
+            background:linear-gradient(90deg, transparent, rgba(47,129,247,0.4), transparent);
+        }
+        .section-title {
+            font-size:11px; font-weight:700; letter-spacing:1.2px;
+            text-transform:uppercase; color:var(--accent2);
+            margin-bottom:18px; padding-bottom:12px;
+            border-bottom:1px solid var(--border);
+            display:flex; align-items:center; gap:8px;
+        }
+        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .form-grid .full { grid-column:1/-1; }
+        .form-group { display:flex; flex-direction:column; gap:6px; }
+        .form-group label {
+            font-size:11px; font-weight:600; letter-spacing:0.5px;
+            color:var(--muted); text-transform:uppercase;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group textarea {
+            width:100%; padding:11px 13px;
+            background:var(--bg); border:1px solid var(--border);
+            border-radius:8px; font-family:'Inter',sans-serif;
+            font-size:14px; color:var(--text); outline:none;
+            transition:border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color:var(--accent);
+            box-shadow:0 0 0 3px var(--accent-glow);
+        }
+        .form-group input::placeholder,
+        .form-group textarea::placeholder { color:#484f58; }
+        .form-group select {
+            cursor:pointer; appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat:no-repeat; background-position:right 12px center;
+        }
+        .form-group select option { background:var(--surface); }
+        .form-group textarea { resize:vertical; min-height:100px; }
+        .radio-group, .checkbox-group { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+        .radio-group label,
+        .checkbox-group label {
+            display:flex; align-items:center; gap:7px;
+            padding:7px 14px; background:var(--bg);
+            border:1px solid var(--border); border-radius:6px;
+            cursor:pointer; font-size:13px; font-weight:500; color:var(--muted);
+            text-transform:none; letter-spacing:0; transition:all 0.2s;
+        }
+        .radio-group label:has(input:checked),
+        .checkbox-group label:has(input:checked) {
+            border-color:var(--accent);
+            background:rgba(47,129,247,0.1); color:var(--accent2);
+        }
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            accent-color:var(--accent); width:14px; height:14px; cursor:pointer;
+        }
+        .form-actions { display:flex; gap:12px; margin-top:24px; }
+        .btn-submit {
+            flex:1; padding:14px; background:var(--accent);
+            color:#fff; border:none; border-radius:8px;
+            font-family:'Inter',sans-serif; font-size:15px; font-weight:600;
+            cursor:pointer; transition:all 0.2s;
+            box-shadow:0 4px 20px var(--accent-glow);
+        }
+        .btn-submit:hover { background:#58a6ff; transform:translateY(-1px); }
+        .btn-reset {
+            padding:14px 22px; background:transparent;
+            border:1px solid var(--border); color:var(--muted);
+            border-radius:8px; font-family:'Inter',sans-serif;
+            font-size:14px; font-weight:500; cursor:pointer; transition:all 0.2s;
+        }
+        .btn-reset:hover { border-color:var(--error); color:var(--error); }
+        .toast {
+            position:fixed; bottom:28px; left:50%;
+            transform:translateX(-50%) translateY(80px);
+            background:var(--surface2); color:var(--text);
+            border:1px solid var(--border);
+            padding:12px 24px; border-radius:8px;
+            font-weight:600; font-size:13px;
+            box-shadow:0 8px 24px rgba(0,0,0,0.4);
+            transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+            z-index:999;
+        }
+        .toast.show { transform:translateX(-50%) translateY(0); }
+        @media(max-width:540px){
+            .navbar { padding:12px 16px; }
+            .form-grid { grid-template-columns:1fr; }
+            .user-badge { display:none; }
+            .form-actions { flex-direction:column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="student-banner">
+    <div class="banner-inner">
+        <span class="banner-name">Fenet Teha</span>
+        <span class="banner-sep">|</span>
+        <span class="banner-detail">ID: <span>RU0816/17</span></span>
+        <span class="banner-sep">|</span>
+        <span class="banner-detail">Jimma University — <span>Information Technology</span></span>
+        <span class="banner-sep">|</span>
+        <span class="banner-detail">IP Course — <span>Individual HTML Assignment</span></span>
+    </div>
+</div>
+
+<nav class="navbar">
+    <div class="navbar-brand">
+        <div class="nav-logo">📋</div>
+        <span>Student Form</span>
+    </div>
+    <div class="user-info">
+        <div class="user-badge">Logged in as: <span id="display-email">—</span></div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<div class="page-wrap">
+    <div class="page-heading">
+        <h1>Student <span>Registration</span></h1>
+        <p>Internet Programming Assignment — Please fill in all fields accurately.</p>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title">👤 Personal Information</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" placeholder="e.g. Fenet">
+            </div>
+            <div class="form-group">
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" placeholder="e.g. Teha">
+            </div>
+            <div class="form-group">
+                <label for="reg-email">Email Address</label>
+                <input type="email" id="reg-email" placeholder="fenet@example.com">
+            </div>
+            <div class="form-group">
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" placeholder="Enter password">
+            </div>
+            <div class="form-group full">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="male"> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="other"> Other</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title">📍 Location</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="e.g. Jimma">
+            </div>
+            <div class="form-group">
+                <label for="state">State / Region</label>
+                <input type="text" id="state" placeholder="e.g. Oromia">
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title">🎓 Educational Background</div>
+        <div class="form-grid">
+            <div class="form-group full">
+                <label for="education">Highest Level of Education</label>
+                <select id="education">
+                    <option value="">— Select your level —</option>
+                    <option value="primary">Primary School</option>
+                    <option value="secondary">Secondary School</option>
+                    <option value="diploma">College Diploma</option>
+                    <option value="degree">First Degree (Bachelor's)</option>
+                    <option value="masters">Master's Degree</option>
+                    <option value="phd">PhD</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title">💡 Areas of Interest</div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" name="interest" value="electronics"> 🔌 Electronics</label>
+            <label><input type="checkbox" name="interest" value="software"> 💻 Software Engineering</label>
+            <label><input type="checkbox" name="interest" value="computer"> 🖥️ Computer Engineering</label>
+            <label><input type="checkbox" name="interest" value="networking"> 🌐 Networking</label>
+            <label><input type="checkbox" name="interest" value="ai"> 🤖 Artificial Intelligence</label>
+            <label><input type="checkbox" name="interest" value="cyber"> 🔒 Cybersecurity</label>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title">💬 Additional Comments</div>
+        <div class="form-group">
+            <label for="comments">Your Message</label>
+            <textarea id="comments" rows="4" placeholder="Any additional information you'd like to share…"></textarea>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button class="btn-submit" onclick="submitForm()">Submit Registration</button>
+        <button class="btn-reset"  onclick="resetForm()">Clear Form</button>
+    </div>
+</div>
+
+<div class="toast" id="toast">Done!</div>
+
+<script>
+    if (!localStorage.getItem('loggedIn') || !localStorage.getItem('userEmail')) {
+        window.location.href = 'index.html';
+    }
+    document.getElementById('display-email').textContent = localStorage.getItem('userEmail') || '—';
+
+    function logout() {
+        localStorage.removeItem('loggedIn');
+        window.location.href = 'index.html';
+    }
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg; t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+    function submitForm() {
+        const fname     = document.getElementById('fname').value.trim();
+        const lname     = document.getElementById('lname').value.trim();
+        const email     = document.getElementById('reg-email').value.trim();
+        const password  = document.getElementById('reg-password').value.trim();
+        const city      = document.getElementById('city').value.trim();
+        const state     = document.getElementById('state').value.trim();
+        const education = document.getElementById('education').value;
+        const genderEl  = document.querySelector('input[name="gender"]:checked');
+        const gender    = genderEl ? genderEl.value : '';
+
+        if (!fname || !lname)  { showToast('⚠️ Please enter your full name.');       return; }
+        if (!email)            { showToast('⚠️ Please enter your email.');            return; }
+        if (!password)         { showToast('⚠️ Please enter a password.');            return; }
+        if (!gender)           { showToast('⚠️ Please select your gender.');          return; }
+        if (!city || !state)   { showToast('⚠️ Please fill in your location.');       return; }
+        if (!education)        { showToast('⚠️ Please select your education level.'); return; }
+
+        const interests = Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(el => el.value);
+        const comments  = document.getElementById('comments').value.trim();
+        console.log('Submitted:', { fname, lname, email, gender, city, state, education, interests, comments });
+        showToast('✅ Form submitted successfully!');
+    }
+    function resetForm() {
+        document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea, select')
+                .forEach(el => el.value = '');
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"]')
+                .forEach(el => el.checked = false);
+        showToast('🧹 Form cleared.');
+    }
+</script>
+</body>
+</html>
